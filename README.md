@@ -39,7 +39,7 @@ the variant's destructor is called.
 
     variant.release ();
 
-See [test-variant.hpp] (https://github.com/apunktbau/variant/tree/master/test-variant.cpp) 
+See [test-variant.cpp] (https://github.com/apunktbau/variant/tree/master/test-variant.cpp) 
 for more code.
 
 ## Other approaches
