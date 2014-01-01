@@ -205,11 +205,14 @@ class Variant {
 
     template <typename U>
     bool is () const { 
-      assert (this->_isSet);
-      constexpr bool         found = VariantDetails::GetIndex <0,U,Ts ...>::found;
-      constexpr unsigned int index = VariantDetails::GetIndex <0,U,Ts ...>::index;
-      static_assert (found, "variant type not found");
-      return this->_setTo == index; 
+      if (this->_isSet) {
+        constexpr bool         found = VariantDetails::GetIndex <0,U,Ts ...>::found;
+        constexpr unsigned int index = VariantDetails::GetIndex <0,U,Ts ...>::index;
+        static_assert (found, "variant type not found");
+        return this->_setTo == index; 
+      }
+      else
+        return false;
     }
 
   private:
