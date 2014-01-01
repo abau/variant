@@ -35,11 +35,11 @@ Call `bool is <T>` to check against the currently stored type:
 
 The `Variant` template is memory-managed: the currently allocated value is deleted if
 the variant's destructor is called.
-`void release ()` deletes the current value explicitly.
+`void release ()` deletes the current value explicitly:
 
     variant.release ();
 
-See [test-variant.hpp] (https://github.com/apunktbau/variant/tree/master/test-variant.hpp) 
+See [test-variant.hpp] (https://github.com/apunktbau/variant/tree/master/test-variant.cpp) 
 for more code.
 
 ## Other approaches
