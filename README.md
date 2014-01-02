@@ -14,7 +14,7 @@ The only requirement is a copy-constructor.
 There are two ways to set a value. 
 By index
 
-    variant.setAt <2> (std::string ("hallo welt"));
+    variant.setAt <2> (std::string ("hello world"));
 
 or by type
 
