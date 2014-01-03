@@ -1,5 +1,6 @@
 #include <cassert>
 #include <type_traits>
+#include <functional>
 
 // `VariantDetails` encapsulates internal details of the variant implementation
 namespace VariantDetails {
@@ -92,6 +93,12 @@ namespace VariantDetails {
       assert ((std::is_same <T,U>::value));
       return reinterpret_cast <U*> (this->t);
     }
+
+    template <typename U>
+    U caseOf (unsigned int i, std::function <U (T&)> branch) {
+      assert (i == 0);
+      return branch (*this->t);
+    }
   };
 
   // Case n > 1;
@@ -132,6 +139,15 @@ namespace VariantDetails {
       }
       else
         return this->ts.template get <U> (i-1);
+    }
+
+    template <typename U>
+    U caseOf (unsigned int i, std::function <U (T& )>     branch
+                            , std::function <U (Ts&)> ... branches) {
+      if (i == 0)
+        return branch (*this->t);
+      else
+        return this->ts.template caseOf (i-1, branches ...);
     }
   };
 };
@@ -214,6 +230,12 @@ class Variant {
       }
       else
         return false;
+    }
+
+    template <typename U>
+    U caseOf (std::function <U (Ts&)> ... branches) {
+      assert (this->_isSet);
+      return this->_varUnion.template caseOf <U> (this->_setTo, branches ...);
     }
 
   private:

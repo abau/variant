@@ -20,9 +20,16 @@ int main () {
   variant.get <std::string> ();                           // gives std::string*
   //variant.get <Foo> ();                                 // runtime error
 
-  assert (variant.is <Foo> ()         == false); 
-  assert (variant.is <int> ()         == false); 
-  assert (variant.is <std::string> () == true);
+  assert (variant.is <Foo> ()         == false);          // test by type           
+  assert (variant.is <int> ()         == false);          // test by type 
+  assert (variant.is <std::string> () == true);           // test by type
+
+  assert ( variant.caseOf <bool> (                        // implicit type matching
+              [] (Foo&)         { return false; }  
+            , [] (int&)         { return false; }
+            , [] (std::string&) { return true ; }
+            )
+         );
 
   //variant.set <bool> (false);          // compilation fails (bool is not in variant)
   //variant.setAt <2>   (12);            // compilation fails (incompatible types)

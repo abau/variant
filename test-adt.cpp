@@ -25,19 +25,20 @@ struct List {
 };
 
 template <typename t>
-unsigned int length (const List <t>& list) {
+unsigned int length (List <t>& list) {
+  return list.constructor.template caseOf <unsigned int> (
 
-  if (list.constructor.template is <typename List <t>::Nil> ()) {
-    return 0;
-  }
-  else if (list.constructor.template is <typename List <t>::Cons> ()) {
-    int      x;
-    List <t> xs;
+        [] (typename List <t>::Nil&) { 
+          return 0; 
+        }
 
-    std::tie (x,xs) = *list.constructor.template get <typename List <t>::Cons> ();
+      , [] (typename List <t>::Cons& arguments) { 
+          int&      x  = std::get <0> (arguments);
+          List <t>& xs = std::get <1> (arguments);
 
-    return 1 + length (xs);
-  }
+          return 1 + length (xs);
+        }
+      );
 }
 
 int main () {
