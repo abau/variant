@@ -166,6 +166,7 @@ class Variant {
       if (this->_isSet) {
         this->_varUnion.copy (this->_setTo, other._varUnion);
       }
+      return *this;
     }
 
     ~Variant () {
