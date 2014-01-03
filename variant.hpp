@@ -1,3 +1,6 @@
+#ifndef VARIANT_35425680_d10a_41c7_b91e_2e48cfe545da
+#define VARIANT_35425680_d10a_41c7_b91e_2e48cfe545da
+
 #include <cassert>
 #include <type_traits>
 #include <functional>
@@ -243,3 +246,5 @@ class Variant {
     bool                                  _isSet;
     unsigned int                          _setTo;
 };
+
+#endif
