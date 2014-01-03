@@ -131,7 +131,7 @@ namespace VariantDetails {
         return reinterpret_cast <U*> (this->t);
       }
       else
-        return this->ts.get <U> (i-1);
+        return this->ts.template get <U> (i-1);
     }
   };
 };
