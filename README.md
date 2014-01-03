@@ -33,6 +33,16 @@ Call `bool is <T>` to check against the currently stored type:
 
     if (variant.is <std::string> ()) { ... }
 
+`U caseOf <U>` provides implicity type matching: it expects a function for each
+value a variant can store.
+Depending on the variant's current value, the corresponding function is executed:
+    
+    variant.caseOf <int> (                        
+      [] (bool&)        { /* do something with bool   */ return 0; }  
+    , [] (int&)         { /* do something with int    */ return 1; }
+    , [] (std::string&) { /* do something with string */ return 2; }
+    )
+
 The `Variant` template is memory-managed: the currently allocated value is deleted if
 the variant's destructor is called.
 `void release ()` deletes the current value explicitly:
@@ -91,29 +101,31 @@ builds an empty list and
 
 wraps the `Cons` constructor.
 
-We define a `lenght` function on `List <t>`:
+We define a `length` function on `List <t>`:
 
     template <typename t>
     unsigned int length (const List <t>& list) {
 
+We use `Variant`'s implicit type matching:
+
+    return list.constructor.template caseOf <unsigned int> (
+
 The base case is rather simple:
 
-    if (list.constructor.template is <typename List <t>::Nil> ()) {
-      return 0;
+    [] (typename List <t>::Nil&) { 
+      return 0; 
     }
 
-We check the variant's content and return constant `0` if an empty list was passed.
+We simple return constant `0` if an empty list was passed.
 In the recursive case we extract the arguments `x` and `xs` of the `Cons` constructor and
 call `length` recursively.
 
-    else if (list.constructor.template is <typename List <t>::Cons> ()) {
-      int      x;
-      List <t> xs;
+    , [] (typename List <t>::Cons& arguments) { 
+        int&      x  = std::get <0> (arguments);
+        List <t>& xs = std::get <1> (arguments);
 
-      std::tie (x,xs) = *list.constructor.template get <typename List <t>::Cons> ();
-
-      return 1 + length (xs);
-    }
+        return 1 + length (xs);
+      }
 
 Now we can call `length` on actual lists:
 
