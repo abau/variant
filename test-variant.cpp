@@ -17,7 +17,7 @@ int main () {
   variant.set <int>         (42);                         // set by type
   variant.set <std::string> (std::string ("hello world"));// set by type
 
-  variant.get <std::string> ();                           // gives std::string*
+  variant.get <std::string> ();                           // gives std::string&
   //variant.get <Foo> ();                                 // runtime error
 
   assert (variant.is <Foo> ()         == false);          // test by type           

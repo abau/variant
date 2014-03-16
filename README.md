@@ -23,7 +23,7 @@ or by type
 . Both methods are statically type-safe. 
 To differentiate between values of the same type `setAt` must be used.
 
-Call `T* get <T>` to retrieve a value from a variant:
+Call `T& get <T>` to retrieve a value from a variant:
 
     variant.get <std::string> ();
 
@@ -33,7 +33,7 @@ Call `bool is <T>` to check against the currently stored type:
 
     if (variant.is <std::string> ()) { ... }
 
-`U caseOf <U>` provides implicity type matching: it expects a function for each
+`U caseOf <U>` provides implicit type matching: it expects a function for each
 value a variant can store.
 Depending on the variant's current value, the corresponding function is executed:
     
