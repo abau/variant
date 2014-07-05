@@ -134,6 +134,12 @@ namespace VariantDetails {
       assert (i == 0);
       return branch (*this->t);
     }
+
+    template <typename U>
+    U caseOf (unsigned int i, std::function <U (const T&)> branch) const {
+      assert (i == 0);
+      return branch (*this->t);
+    }
   };
 
   // Case n > 1;
@@ -201,6 +207,17 @@ namespace VariantDetails {
     template <typename U>
     U caseOf (unsigned int i, std::function <U (T& )>     branch
                             , std::function <U (Ts&)> ... branches) {
+      if (i == 0) {
+        return branch (*this->t);
+      }
+      else {
+        return this->ts.template caseOf (i-1, branches ...);
+      }
+    }
+
+    template <typename U>
+    U caseOf (unsigned int i, std::function <U (const T& )>     branch
+                            , std::function <U (const Ts&)> ... branches) const {
       if (i == 0) {
         return branch (*this->t);
       }
@@ -333,6 +350,12 @@ class Variant {
 
     template <typename U>
     U caseOf (std::function <U (Ts&)> ... branches) {
+      assert (this->_isSet);
+      return this->_varUnion.template caseOf <U> (this->_setTo, branches ...);
+    }
+
+    template <typename U>
+    U caseOf (std::function <U (const Ts&)> ... branches) const {
       assert (this->_isSet);
       return this->_varUnion.template caseOf <U> (this->_setTo, branches ...);
     }
