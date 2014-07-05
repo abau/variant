@@ -150,10 +150,12 @@ namespace VariantDetails {
     const VariantUnion& operator= (      VariantUnion&&) = delete;
 
     void copy (unsigned int i, const VariantUnion& other) {
-      if (i == 0)
+      if (i == 0) {
         this->t = new T (*other.t);
-      else
+      }
+      else {
         this->ts.copy (i-1, other.ts);
+      }
     }
 
     void move (unsigned int i, VariantUnion&& other) {
@@ -161,15 +163,18 @@ namespace VariantDetails {
         this->t = other.t;
         other.t = nullptr;
       }
-      else
+      else {
         this->ts.move (i-1, std::move (other.ts));
+      }
     }
 
     void release (unsigned int i) {
-      if (i == 0)
+      if (i == 0) {
         delete this->t;
-      else
+      }
+      else {
         this->ts.release (i-1);
+      }
     }
 
     template <unsigned int i, typename U>
@@ -188,17 +193,20 @@ namespace VariantDetails {
         assert ((std::is_same<U,T>::value));
         return *reinterpret_cast <U*> (this->t);
       }
-      else
+      else {
         return this->ts.template get <U> (i-1);
+      }
     }
 
     template <typename U>
     U caseOf (unsigned int i, std::function <U (T& )>     branch
                             , std::function <U (Ts&)> ... branches) {
-      if (i == 0)
+      if (i == 0) {
         return branch (*this->t);
-      else
+      }
+      else {
         return this->ts.template caseOf (i-1, branches ...);
+      }
     }
   };
 };
@@ -216,21 +224,23 @@ class Variant {
     Variant (const Variant& other) 
       : _varUnion ()
       , _isSet    (other._isSet)
-      , _setTo    (other._setTo) {
-
-        if (this->_isSet)
-          this->_varUnion.copy (this->_setTo, other._varUnion);
+      , _setTo    (other._setTo) 
+    {
+      if (this->_isSet) {
+        this->_varUnion.copy (this->_setTo, other._varUnion);
+      }
     }
 
     Variant (Variant&& other) 
       : _varUnion ()
       , _isSet    (other._isSet)
-      , _setTo    (other._setTo) {
+      , _setTo    (other._setTo) 
+    {
+      other._isSet = false;
 
-        other._isSet = false;
-
-        if (this->_isSet)
-          this->_varUnion.move (this->_setTo, std::move (other._varUnion));
+      if (this->_isSet) {
+        this->_varUnion.move (this->_setTo, std::move (other._varUnion));
+      }
     }
 
     const Variant& operator= (const Variant& other) {
@@ -316,8 +326,9 @@ class Variant {
         static_assert (found, "variant type not found");
         return this->_setTo == index; 
       }
-      else
+      else {
         return false;
+      }
     }
 
     template <typename U>
