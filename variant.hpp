@@ -87,6 +87,10 @@ namespace VariantDetails {
   // Case n == 1;
   template <typename T>
   union VariantUnion <T> {
+    static_assert (  std::is_object   <T>::value, "non-object types are not supported");
+    static_assert (! std::is_const    <T>::value, "const-qualified types are not supported");
+    static_assert (! std::is_volatile <T>::value, "volatile-qualified types are not supported");
+
     T* t;
 
     VariantUnion () : t (nullptr) {}
@@ -146,6 +150,10 @@ namespace VariantDetails {
   // Case n > 1;
   template <typename T,typename ... Ts>
   union VariantUnion <T, Ts ...> {
+    static_assert (  std::is_object   <T>::value, "non-object types are not supported");
+    static_assert (! std::is_const    <T>::value, "const-qualified types are not supported");
+    static_assert (! std::is_volatile <T>::value, "volatile-qualified types are not supported");
+
     T* t;
     VariantUnion <Ts ...> ts;
 
