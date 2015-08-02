@@ -17,16 +17,16 @@ namespace VariantDetails {
 
   template <typename U, typename T, typename ... Ts>
   struct InitValue <0,U,T,Ts ...> {
-    static void run (VariantUnion <T, Ts ...>* variant) {
+    static void run (VariantUnion <T, Ts ...>& variant) {
       static_assert (std::is_same <T,U>::value, "variant type mismatch");
-      variant->t = new U ();
+      variant.t = new U ();
     }
   };
 
   template <unsigned int i, typename U, typename T, typename ... Ts>
   struct InitValue <i,U,T,Ts ...> {
-    static void run (VariantUnion <T,Ts ...>* variant) {
-      InitValue <i-1,U,Ts ...> :: run (&variant->ts);
+    static void run (VariantUnion <T,Ts ...>& variant) {
+      InitValue <i-1,U,Ts ...> :: run (variant.ts);
     }
   };
 
@@ -36,16 +36,16 @@ namespace VariantDetails {
 
   template <typename U, typename T, typename ... Ts>
   struct SetValue <0,U,T,Ts ...> {
-    static void run (VariantUnion <T, Ts ...>* variant, const U& u) {
+    static void run (VariantUnion <T, Ts ...>& variant, const U& u) {
       static_assert (std::is_same <T,U>::value, "variant type mismatch");
-      variant->t = new U (u);
+      variant.t = new U (u);
     }
   };
 
   template <unsigned int i, typename U, typename T, typename ... Ts>
   struct SetValue <i,U,T,Ts ...> {
-    static void run (VariantUnion <T,Ts ...>* variant, const U& u) {
-      SetValue <i-1,U,Ts ...> :: run (&variant->ts, u);
+    static void run (VariantUnion <T,Ts ...>& variant, const U& u) {
+      SetValue <i-1,U,Ts ...> :: run (variant.ts, u);
     }
   };
 
@@ -114,12 +114,12 @@ namespace VariantDetails {
 
     template <unsigned int i, typename U>
     void init () {
-      InitValue <i,U,T> :: run (this);
+      InitValue <i,U,T> :: run (*this);
     }
 
     template <unsigned int i, typename U>
     void set (const U& u) {
-      SetValue <i,U,T> :: run (this, u);
+      SetValue <i,U,T> :: run (*this, u);
     }
 
     template <typename U>
@@ -186,12 +186,12 @@ namespace VariantDetails {
 
     template <unsigned int i, typename U>
     void init () {
-      InitValue <i,U,T,Ts ...> :: run (this);
+      InitValue <i,U,T,Ts ...> :: run (*this);
     }
 
     template <unsigned int i, typename U>
     void set (const U& u) {
-      SetValue <i,U,T,Ts ...> :: run (this, u);
+      SetValue <i,U,T,Ts ...> :: run (*this, u);
     }
 
     template <typename U>
